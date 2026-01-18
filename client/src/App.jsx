@@ -23,8 +23,9 @@ function App() {
           <Route path='/book' element={<Book />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/forgot-password' element={<ForgotPassword />}></Route>
-          <Route path='/profile/:id' element={<Profile />}></Route>
+          <Route path='/profile' element={<Profile />}></Route>
           <Route path='/*' element={<PageNotFound />}></Route>
+
         </Routes>
       </BrowserRouter>
     </div>
