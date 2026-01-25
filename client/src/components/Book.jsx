@@ -4,16 +4,17 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 function Book() {
-    const [search, setSearch] = useState("");
+    let [search, setSearch] = useState("");
+    let [book, setBook] = useState([])
 
-    const books = [
+    let books = [
         { id: 1, title: "Atomic Habits", author: "James Clear", rating: 5 },
         { id: 2, title: "Deep Work", author: "Cal Newport", rating: 4 },
         { id: 3, title: "The Alchemist", author: "Paulo Coelho", rating: 4 },
         { id: 4, title: "Sapiens", author: "Yuval Noah Harari", rating: 5 },
     ];
 
-    const filteredBooks = useMemo(() => {
+    let filteredBooks = useMemo(() => {
         return books.filter((book) =>
             book.title.toLowerCase().includes(search.toLowerCase())
         );
@@ -90,12 +91,12 @@ function Book() {
                                     </Link>
 
                                     {/* Delete */}
-                                    <Link
+                                    {/* <Link
                                         to="#"
                                         className="w-full sm:flex-1 text-center py-2.5 px-4 rounded-2xl shadow-lg bg-gradient-to-r from-pink-600 to-red-500 hover:opacity-90 transition font-medium text-sm"
                                     >
                                         Delete
-                                    </Link>
+                                    </Link> */}
                                 </div>
 
                             </div>

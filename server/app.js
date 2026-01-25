@@ -4,6 +4,7 @@ const mongoDb = require('./config/mongoDb');
 const userRoute = require('./routes/userRoute');
 const bookRoute = require('./routes/bookRoute');
 const movieRoute = require('./routes/movieRoute');
+const imageRoute = require('./routes/imageRoute');
 
 
 let app = express()
@@ -14,11 +15,10 @@ mongoDb();
 app.use('/api/user', userRoute)
 app.use('/api/book', bookRoute)
 app.use('/api/movie', movieRoute)
-
-
+app.use('/api/image', imageRoute)
 
 app.listen(3000, () => {
     console.log("Mithra-app server Connected");
 })
 
- 
+

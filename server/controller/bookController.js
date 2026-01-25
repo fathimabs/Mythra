@@ -1,7 +1,10 @@
 const Books = require("../models/bookModel");
 
+let fs = require('fs')
+
 let addBook = async (req, res) => {
-    let { imageUrl, title, author, genre, pages, watchedOn, rating, review } = req.body
+    let { imageUrl, title, author, genre, pages, readOn, rating, review } = req.body
+
 
     try {
         let userId = req.params.userId
@@ -17,7 +20,7 @@ let addBook = async (req, res) => {
         }
         let newBook = await new Books({
             userId,
-            imageUrl: req.file?.path || "",
+            imageUrl: req.file?.filename || "",
             title,
             author,
             genre,
@@ -119,5 +122,18 @@ let getBookCountByUser = async (req, res) => {
     }
 }
 
+let getImage = (req, res) => {
 
-module.exports = { addBook, getBooks, getBookById, updateBook, getBookCountByUser }
+    fs.readFile(`C:/Users/user/Desktop/fathima-bs/Mithra/server/uploads/${req.params.imgName}`, (err, data) => {
+        if (err) {
+            return res.status(404).send("Image not found");
+        }
+
+        // res.set("Content-Type", "image/jpeg"); // or png
+        res.send(data);
+    })
+
+}
+
+
+module.exports = { addBook, getBooks, getBookById, updateBook, getBookCountByUser, getImage }

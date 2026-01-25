@@ -86,13 +86,13 @@ function Movie() {
                                         Edit
                                     </Link>
 
-                                    {/* Delete */}
+                                    {/* Delete
                                     <Link
                                         to="#"
                                         className="w-full sm:flex-1 text-center py-2.5 px-4 rounded-2xl shadow-lg bg-gradient-to-r from-pink-600 to-red-500 hover:opacity-90 transition font-medium text-sm"
                                     >
                                         Delete
-                                    </Link>
+                                    </Link> */}
                                 </div>
 
                             </div>

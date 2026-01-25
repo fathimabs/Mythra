@@ -99,4 +99,36 @@ let updateMovie = async (req, res) => {
     }
 }
 
-module.exports = { addMovie, getAllMovie, getMovieById, updateMovie }
+let getMovieCountByUser = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        let totalMovies = await Movies.countDocuments({ userId });
+
+        res.status(200).json({
+            message: "Book count fetched successfully",
+            totalMovies
+        });
+    } catch (error) {
+        console.error("Book Count Error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+let getImage = (req, res) => {
+
+    fs.readFile(`C:/Users/user/Desktop/fathima-bs/Mithra/server/uploads/${req.params.imgName}`, (err, data) => {
+        if (err) {
+            return res.status(404).send("Image not found");
+        }
+
+        // res.set("Content-Type", "image/jpeg"); // or png
+        res.send(data);
+    })
+
+}
+module.exports = { addMovie, getAllMovie, getMovieById, updateMovie, getImage, getMovieCountByUser }

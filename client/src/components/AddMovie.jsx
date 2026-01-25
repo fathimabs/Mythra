@@ -13,12 +13,11 @@ function AddMovie() {
   let userId = localStorage.getItem("userId");
 
 
-
   let [data, setData] = useState({
     imageUrl: "",
     title: "",
     director: "",
-    genre: "Unknown",
+    genre: "",
     duration: 0,
     watchedOn: "",
     rating: 0,
@@ -53,11 +52,13 @@ function AddMovie() {
     }
     if (!data.title) newErrors.title = "Movie title is Required"
 
-    if (!data.director) newErrors.author = "Director name is Required"
+    if (!data.director) newErrors.director = "Director name is Required"
 
     if (!data.genre) newErrors.genre = "genre is Required"
 
     if (!data.review) newErrors.review = "Movie review is Required"
+
+    if (!data.rating) newErrors.rating = "rating is Required"
 
     return newErrors
   }
@@ -128,15 +129,18 @@ function AddMovie() {
             Add a movie to your journey 🎬✨
           </p>
 
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-5" ref={formRefresh} onSubmit={handleSubmit}>
 
             {/* Movie Poster */}
             <div>
               <label className="block text-sm text-zinc-300 mb-1">Movie Poster</label>
               <input
                 type="file"
+                name='imageUrl'
+                onChange={getData}
                 className="w-full px-4 py-2 rounded-lg bg-zinc-900/80 border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
+              {errors.imageUrl && (<p className="text-red-400 text-sm mt-1">{errors.imageUrl}</p>)}
             </div>
 
             {/* Movie Title */}
@@ -144,19 +148,25 @@ function AddMovie() {
               <label className="block text-sm text-zinc-300 mb-1">Movie Title</label>
               <input
                 type="text"
+                onChange={getData}
+                name='title'
                 placeholder="Enter movie title"
                 className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500 placeholder-zinc-500"
               />
-            </div> 
+              {errors.title && (<p className="text-red-400 text-sm mt-1">{errors.title}</p>)}
+            </div>
 
             {/* Director */}
             <div>
               <label className="block text-sm text-zinc-300 mb-1">Director</label>
               <input
                 type="text"
+                onChange={getData}
+                name='director'
                 placeholder="Enter director name"
                 className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500 placeholder-zinc-500"
               />
+              {errors.director && (<p className="text-red-400 text-sm mt-1">{errors.director}</p>)}
             </div>
 
             {/* Genre */}
@@ -164,9 +174,12 @@ function AddMovie() {
               <label className="block text-sm text-zinc-300 mb-1">Genre</label>
               <input
                 type="text"
+                onChange={getData}
+                name='genre'
                 placeholder="Action, Drama, Sci-Fi..."
                 className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500 placeholder-zinc-500"
               />
+              {errors.genre && (<p className="text-red-400 text-sm mt-1">{errors.genre}</p>)}
             </div>
 
             {/* Review */}
@@ -174,11 +187,33 @@ function AddMovie() {
               <label className="block text-sm text-zinc-300 mb-1">Review</label>
               <textarea
                 rows="3"
+                name='review'
+                onChange={getData}
                 placeholder="Your thoughts about this movie..."
                 className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500 resize-none placeholder-zinc-500"
               />
+              {errors.review && (<p className="text-red-400 text-sm mt-1">{errors.review}</p>)}
             </div>
-
+            {/* Star Rating */}
+            <div>
+              <label className="block text-sm text-zinc-300 mb-1">Your Rating</label>
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    name='rating'
+                    onChange={getData}
+                    onClick={() => setRating(star)}
+                    className={`text-xl ${star <= rating ? 'text-purple-400' : 'text-zinc-500'
+                      } transition-colors`}
+                  >
+                    ★
+                  </button>
+                ))}
+                {errors.rating && (<p className="text-red-400 text-sm mt-1">{errors.rating}</p>)}
+              </div>
+            </div>
             {/* Toggle Additional Fields */}
             <button
               type="button"
@@ -196,8 +231,11 @@ function AddMovie() {
                   <label className="block text-sm text-zinc-300 mb-1">Watched On</label>
                   <input
                     type="date"
+                    name='watchedOn'
+                    onChange={getData}
                     className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500"
                   />
+
                 </div>
 
                 {/* Duration */}
@@ -205,6 +243,8 @@ function AddMovie() {
                   <label className="block text-sm text-zinc-300 mb-1">Duration (minutes)</label>
                   <input
                     type="number"
+                    name='duration'
+                    onChange={getData}
                     placeholder="Enter duration"
                     className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500"
                   />
@@ -215,6 +255,8 @@ function AddMovie() {
                   <label className="block text-sm text-zinc-300 mb-1">Status</label>
                   <select
                     defaultValue=""
+                    name='status'
+                    onChange={getData}
                     className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="" disabled>Select watching status</option>
@@ -224,23 +266,7 @@ function AddMovie() {
                   </select>
                 </div>
 
-                {/* Star Rating */}
-                <div>
-                  <label className="block text-sm text-zinc-300 mb-1">Your Rating</label>
-                  <div className="flex space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        className={`text-xl ${star <= rating ? 'text-purple-400' : 'text-zinc-500'
-                          } transition-colors`}
-                      >
-                        ★
-                      </button>
-                    ))}
-                  </div>
-                </div>
+
 
               </div>
             )}

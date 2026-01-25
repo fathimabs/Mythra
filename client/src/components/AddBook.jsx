@@ -18,7 +18,7 @@ function AddBook() {
     imageUrl: "",
     title: "",
     author: "",
-    genre: "Unknown",
+    genre: "",
     pages: 0,
     readOn: "",
     rating: 0,
@@ -59,6 +59,9 @@ function AddBook() {
 
     if (!data.review) newErrors.review = "Book review is Required"
 
+    if (rating < 1) {
+      newErrors.rating = 'Please select a rating.';
+    }
     return newErrors
   }
 
@@ -190,6 +193,26 @@ function AddBook() {
               />
               {errors.review && (<p className="text-red-400 text-sm mt-1">{errors.review}</p>)}
             </div>
+            {/* Rating */}
+            <div>
+              <label className="block text-sm text-zinc-300 mb-1">Your Rating</label>
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    name='rating'
+                    onClick={() => setRating(star)}
+                    className={`text-xl ${star <= rating ? 'text-yellow-400' : 'text-zinc-500'
+                      } transition-colors`}
+                  >
+
+                    ★
+                  </button>
+                ))}
+                {errors.rating && (<p className="text-red-400 text-sm mt-1">{errors.rating}</p>)}
+              </div>
+            </div>
 
             {/* Toggle Additional Details */}
             <button
@@ -240,24 +263,7 @@ function AddBook() {
                   </select>
                 </div>
 
-                {/* Rating */}
-                <div>
-                  <label className="block text-sm text-zinc-300 mb-1">Your Rating</label>
-                  <div className="flex space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        name='review'
-                        onClick={() => setRating(star)}
-                        className={`text-xl ${star <= rating ? 'text-yellow-400' : 'text-zinc-500'
-                          } transition-colors`}
-                      >
-                        ★
-                      </button>
-                    ))}
-                  </div>
-                </div>
+
 
               </div>
             )}

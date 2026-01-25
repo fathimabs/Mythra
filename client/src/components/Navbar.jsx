@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import mithralogo from "../assets/images/mithralogo.png";
 
 function Navbar() {
   let [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  let navigate = useNavigate()
 
   // Generate an array for stars/dots
   let starsAndDots = Array.from({ length: 150 }); // 100 items, adjust density
-
+  let onHandleLogout = () => {
+    localStorage.clear();
+    navigate('/')
+  }
   return (
     <nav className="relative  top-0 z-50 bg-black border-b border-white/10 overflow-hidden">
-      
+
       {/* Galaxy background */}
       <div className="absolute inset-0 pointer-events-none">
         {starsAndDots.map((_, i) => {
@@ -58,6 +62,8 @@ function Navbar() {
           <Link to="/book" className="hover:text-purple-400 transition">Books</Link>
           <Link to="/movie" className="hover:text-purple-400 transition">Movies</Link>
           <Link to="/profile" className="hover:text-purple-400 transition">Profile</Link>
+          <button onClick={onHandleLogout} className="hover:text-purple-400 transition">Logout</button>
+       
         </div>
 
         {/* Mobile Menu Button */}

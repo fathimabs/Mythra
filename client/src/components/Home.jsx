@@ -4,32 +4,41 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import api from "../axios/axios";
 
+let BASE_URL = import.meta.env.VITE_BASE_URL + '/api/image'
+
 function Home() {
   let userId = localStorage.getItem("userId");
 
   let [bookCount, setBookCount] = useState(0);
+  let [movieCount, setMovieCount] = useState(0)
   let [recentBooks, setRecentBooks] = useState([]);
   let [recentMovies, setRecentMovies] = useState([]);
 
   useEffect(() => {
     if (!userId) return;
 
-    const fetchDashboardData = async () => {
+    const fetchData = async () => {
       try {
 
-        let countRes = await api.get(`/book/count/${userId}`);
-        setBookCount(countRes.data.totalBooks);
+        let booCountRes = await api.get(`/book/count/${userId}`);
+        setBookCount(booCountRes.data.totalBooks);
 
+        let movieCountRes = await api.get(`/movie/count/${userId}`)
+        setMovieCount = movieCountRes.data.totalMovies
 
         let bookRes = await api.get(`/book/allbook/${userId}?limit=3`);
         setRecentBooks(bookRes.data.books);
+
+        let movieRes = await api.get(`/movie/all-movie/${userId}?limit=3`);
+        setRecentMovies(movieRes.data.movies);
+
 
       } catch (error) {
         console.error("Dashboard fetch error", error);
       }
     };
 
-    fetchDashboardData();
+    fetchData();
   }, [userId]);
 
   return (
@@ -61,7 +70,7 @@ function Home() {
       <section className="max-w-6xl mx-auto px-6 mb-16 grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl text-center">
           <p className="text-zinc-400 text-sm">Movies Watched</p>
-          <h3 className="text-3xl font-semibold mt-2">— 🎬</h3>
+          <h3 className="text-3xl font-semibold mt-2">{movieCount} 🎬</h3>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl text-center">
@@ -71,7 +80,7 @@ function Home() {
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl text-center">
           <p className="text-zinc-400 text-sm">Favorites</p>
-          <h3 className="text-3xl font-semibold mt-2">— ⭐</h3>
+          <h3 className="text-3xl font-semibold mt-2">0⭐</h3>
         </div>
       </section>
 
@@ -93,7 +102,7 @@ function Home() {
               <div className="h-48 bg-gradient-to-br from-purple-700/40 to-indigo-700/40 flex items-center justify-center text-zinc-300 px-2">
                 {book.imageUrl ? (
                   <img
-                    src={book.imageUrl}
+                    src={`${BASE_URL}/${book.imageUrl}`}
                     alt={book.title}
                     className="h-full w-full object-cover"
                   />
@@ -129,10 +138,11 @@ function Home() {
               <div className="h-48 bg-gradient-to-br from-indigo-700/40 to-purple-700/40 flex items-center justify-center text-zinc-300 px-2">
                 {movie.imageUrl ? (
                   <img
-                    src={movie.imageUrl}
+                    src={`${BASE_URL}/${movie.imageUrl}`}
                     alt={movie.title}
                     className="h-full w-full object-cover"
                   />
+
                 ) : (
                   <span className="text-lg font-semibold text-center">
                     {movie.title}
