@@ -6,6 +6,7 @@ import api from "../axios/axios";
 
 let BASE_URL = import.meta.env.VITE_BASE_URL + '/api/image'
 
+
 function Home() {
   let userId = localStorage.getItem("userId");
 
@@ -24,14 +25,14 @@ function Home() {
         setBookCount(booCountRes.data.totalBooks);
 
         let movieCountRes = await api.get(`/movie/count/${userId}`)
-        setMovieCount = movieCountRes.data.totalMovies
+        setMovieCount(movieCountRes.data.totalMovies)
+
 
         let bookRes = await api.get(`/book/allbook/${userId}?limit=3`);
         setRecentBooks(bookRes.data.books);
 
         let movieRes = await api.get(`/movie/all-movie/${userId}?limit=3`);
-        setRecentMovies(movieRes.data.movies);
-
+        setRecentMovies(movieRes.data.movies);      
 
       } catch (error) {
         console.error("Dashboard fetch error", error);
@@ -158,7 +159,6 @@ function Home() {
           ))}
         </div>
       </section>
-
 
       <Footer />
     </div>

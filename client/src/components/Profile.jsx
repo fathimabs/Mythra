@@ -12,7 +12,7 @@ function Profile() {
   let [formData, setFormData] = useState({
     username: "",
     email: ""
-  });
+  }); 
 
   let [errors, setErrors] = useState({})
   let userId = localStorage.getItem("userId");

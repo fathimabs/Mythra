@@ -1,18 +1,33 @@
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import api from "../axios/axios";
+
+let BASE_URL = import.meta.env.VITE_BASE_URL + '/api/image'
 
 function Book() {
-    let [search, setSearch] = useState("");
-    let [book, setBook] = useState([])
+    let navigate = useNavigate()
 
-    let books = [
-        { id: 1, title: "Atomic Habits", author: "James Clear", rating: 5 },
-        { id: 2, title: "Deep Work", author: "Cal Newport", rating: 4 },
-        { id: 3, title: "The Alchemist", author: "Paulo Coelho", rating: 4 },
-        { id: 4, title: "Sapiens", author: "Yuval Noah Harari", rating: 5 },
-    ];
+    let [search, setSearch] = useState("");
+    let [books, setBooks] = useState([])
+    let [error, setError] = useState("")
+    useEffect(() => {
+        if (!userId) {
+            navigate("/");
+            return;
+        }
+        let fetchBookData = async (req, res) => {
+            setError("")
+            try {
+                let res = await api.get(`/book/allbook/${userId}?limit=50`)
+                setBooks(res.data.books || [])
+            } catch (error) {
+                console.error("Failed to fetch books:", error);
+            }
+        }
+        fetchBookData()
+    }, [userId, navigate])
 
     let filteredBooks = useMemo(() => {
         return books.filter((book) =>

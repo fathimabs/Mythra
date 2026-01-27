@@ -5,115 +5,8 @@ import Footer from './Footer';
 import api from '../axios/axios'
 import { useRef } from 'react';
 
-function AddBook() {
-
-  let navigate = useNavigate()
-  let formRefresh = useRef()
-
-  let userId = localStorage.getItem("userId");
-
-  let [showMore, setShowMore] = useState(false);
-  let [rating, setRating] = useState(0);
-  let [errors, setErrors] = useState({});
-
-  let [data, setData] = useState({
-    imageUrl: "",
-    title: "",
-    author: "",
-    genre: "",
-    pages: 0,
-    readOn: "",
-    rating: 0,
-    review: ""
-  })
-
-  function getData(e) {
-
-    if (e.target.type === "file") {
-      setData({
-        ...data,
-        imageUrl: e.target.files[0]
-      })
-    } else {
-      setData({
-        ...data,
-        [e.target.name]: e.target.value
-      })
-    }
-  }
-  let validate = () => {
-    let newErrors = {}
-
-
-    if (!data.imageUrl) {
-      newErrors.imageUrl = "Book cover is Required"
-    } else {
-      let allowTypes = ["image/jpeg", "image/png"]
-      if (!allowTypes.includes(data.imageUrl.type)) {
-        newErrors.imageUrl = "Only JPG, PNG, or WEBP images are allowed";
-      }
-    }
-    if (!data.title) newErrors.title = "Book title is Required"
-
-    if (!data.author) newErrors.author = "Author name is Required"
-
-    if (!data.genre) newErrors.genre = "genre is Required"
-
-    if (!data.review) newErrors.review = "Book review is Required"
-
-    if (rating < 1) {
-      newErrors.rating = 'Please select a rating.';
-    }
-    return newErrors
-  }
-
-  let handleSubmit = async (e) => {
-    e.preventDefault();
-    let validateErrors = validate();
-
-    setErrors(validateErrors)
-    if (Object.keys(validateErrors).length > 0) {
-      return;
-    }
-    try {
-      let formData = new FormData()
-      formData.append("userId", userId)
-      formData.append("imageUrl", data.imageUrl);
-      formData.append("title", data.title);
-      formData.append("author", data.author);
-      formData.append("genre", data.genre);
-      formData.append("pages", data.pages);
-      formData.append("readOn", data.readOn);
-      formData.append("status", data.status);
-      formData.append("review", data.review);
-      formData.append("rating", rating);
-
-      await api.post(`/book/addbook/${userId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-
-      alert("Book Added Successfully!");
-
-      formRefresh.current.reset()
-      setRating(0);
-      setShowMore(false);
-      setErrors({});
-      setData({
-        imageUrl: "",
-        title: "",
-        author: "",
-        genre: "Unknown",
-        pages: 0,
-        readOn: "",
-        status: "",
-        review: "",
-      });
-      navigate('/book')
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      alert("Failed to add book");
-    }
-  }
+function BookUpdate() {
+  
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#0b0d18] via-[#0f1224] to-[#0b0d18] text-zinc-100">
@@ -285,4 +178,4 @@ function AddBook() {
   );
 }
 
-export default AddBook;
+export default BookUpdate;

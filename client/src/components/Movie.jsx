@@ -1,23 +1,45 @@
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import api from "../axios/axios";
+
+let BASE_URL = import.meta.env.VITE_BASE_URL + '/api/image'
 
 function Movie() {
-    const [search, setSearch] = useState("");
+    let navigate = useNavigate();
+    let userId = localStorage.getItem("userId");
 
-    const movies = [
-        { id: 1, title: "Inception", director: "Christopher Nolan", rating: 5 },
-        { id: 2, title: "Interstellar", director: "Christopher Nolan", rating: 5 },
-        { id: 3, title: "The Dark Knight", director: "Christopher Nolan", rating: 5 },
-        { id: 4, title: "Parasite", director: "Bong Joon-ho", rating: 4 },
-    ];
+    let [search, setSearch] = useState("");
+    let [movies, setMovies] = useState([]);
+    let [error, setError] = useState("");
 
-    const filteredMovies = useMemo(() => {
+    useEffect(() => {
+        if (!userId) {
+            navigate("/");
+            return;
+        }
+
+        let fetchMovies = async () => {
+            setError("");
+            try {
+                let res = await api.get(`/movie/all-movie/${userId}?limit=50`);
+                setMovies(res.data.movies || []);
+            } catch (err) {
+                console.error("Failed to fetch movies:", err);
+                setError("Failed to fetch movies. Please try again later.");
+            }
+        };
+
+        fetchMovies();
+    }, [userId, navigate]);
+
+    // Filter movies by search
+    let  filteredMovies = useMemo(() => {
         return movies.filter((movie) =>
-            movie.title.toLowerCase().includes(search.toLowerCase())
+            movie.title?.toLowerCase().includes(search.toLowerCase())
         );
-    }, [search]);
+    }, [search, movies]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-zinc-100 flex flex-col">
@@ -49,59 +71,62 @@ function Movie() {
                     />
                 </div>
 
+                {/* Error message */}
+                {error && <div className="text-red-500 text-center mb-6">{error}</div>}
+
                 {/* Movie Grid */}
-                {filteredMovies.length === 0 ? (
+                {filteredMovies.length === 0 && !error && (
                     <div className="text-center text-zinc-400 mt-20">No movies found.</div>
-                ) : (
-                    <div className="flex flex-wrap gap-6">
-                        {filteredMovies.map((movie) => (
-                            <div
-                                key={movie.id}
-                                className="w-full sm:w-[48%] lg:w-[31%] xl:w-[23%] rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg hover:scale-[1.02] transition p-4 flex flex-col gap-3"
-                            >
-                                <div className="h-44 bg-gradient-to-br from-purple-700/40 to-indigo-700/40 rounded-xl flex items-center justify-center text-sm text-zinc-300">
-                                    Poster
-                                </div>
+                )}
 
-                                <div>
-                                    <h2 className="font-semibold text-lg leading-tight">
-                                        {movie.title}
-                                    </h2>
-                                    <p className="text-sm text-zinc-400">by {movie.director}</p>
-                                </div>
-
-                                <div className="text-yellow-400 text-sm">
-                                    {"⭐".repeat(movie.rating)}
-                                </div>
-
-                                <p className="text-xs text-zinc-500 mt-auto">
-                                    Personal notes about the movie...
-                                </p>
-                                <div className="mt-auto pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-3">
-                                    {/* Edit */}
-                                    <Link
-                                        to={`/update/${movie.id}`}
-                                        className="w-full sm:flex-1 text-center py-2.5 px-4 rounded-2xl shadow-lg bg-gradient-to-r from-purple-600 to-indigo-500 hover:opacity-90 transition font-medium text-sm"
-                                    >
-                                        Edit
-                                    </Link>
-
-                                    {/* Delete
-                                    <Link
-                                        to="#"
-                                        className="w-full sm:flex-1 text-center py-2.5 px-4 rounded-2xl shadow-lg bg-gradient-to-r from-pink-600 to-red-500 hover:opacity-90 transition font-medium text-sm"
-                                    >
-                                        Delete
-                                    </Link> */}
-                                </div>
-
+                <div className="flex flex-wrap gap-6">
+                    {filteredMovies.map((movie) => (
+                        <div
+                            key={movie._id ?? movie.id}
+                            className="w-full sm:w-[48%] lg:w-[31%] xl:w-[23%] rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg hover:scale-[1.02] transition p-4 flex flex-col gap-3"
+                        >
+                            {/* Poster */}
+                            <div className="h-44 bg-gradient-to-br from-purple-700/40 to-indigo-700/40 rounded-xl flex items-center justify-center text-sm text-zinc-300">
+                                {movie.imageUrl ? (
+                                    <img
+                                        src={`${BASE_URL}/${movie.imageUrl}`}
+                                        alt={movie.title ?? "Movie Poster"}
+                                        className="h-full w-full object-cover rounded-xl"
+                                    />
+                                ) : (
+                                    <div className="h-full w-full flex items-center justify-center text-zinc-300">
+                                        Poster
+                                    </div>
+                                )}
                             </div>
 
+                            {/* Movie Info */}
+                            <div>
+                                <h2 className="font-semibold text-lg leading-tight">{movie.title}</h2>
+                                <p className="text-sm text-zinc-400">by {movie.director || "Unknown"}</p>
+                            </div>
 
-                        ))}
-                    </div>
+                            {/* Rating */}
+                            <div className="text-yellow-400 text-sm">
+                                {"⭐".repeat(movie.rating || 0)}
+                            </div>
 
-                )}
+                            <p className="text-xs text-zinc-500 mt-auto">
+                                Personal notes about the movie...
+                            </p>
+
+                            {/* Actions */}
+                            <div className="mt-auto pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-3">
+                                <Link
+                                    to={`/movieupdate/${movie._id ?? movie.id}`}
+                                    className="w-full sm:flex-1 text-center py-2.5 px-4 rounded-2xl shadow-lg bg-gradient-to-r from-purple-600 to-indigo-500 hover:opacity-90 transition font-medium text-sm"
+                                >
+                                    Edit
+                                </Link>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </section>
 
             <Footer />

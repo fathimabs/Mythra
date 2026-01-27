@@ -1,10 +1,10 @@
 let express = require('express')
-const { addBook, getBooks, getBookById, updateBook, getBookCountByUser, getImage } = require('../controller/bookController')
-const upload = require('../config/multer')
+let { addBook, getBooks, getBookById, updateBook, getBookCountByUser } = require('../controller/bookController')
+let upload = require('../config/multer')
 
 let bookRoute = express.Router()
 
-
+ 
 
 bookRoute.post('/addbook/:userId', upload.single('imageUrl'), addBook)
 bookRoute.get('/allbook/:userId', getBooks)

@@ -1,11 +1,15 @@
-const Movies = require("../models/movieModel");
+let Movies = require("../models/movieModel");
 
 
 let addMovie = async (req, res) => {
     let { imageUrl, title, director, genre, duration, watchedOn, rating, review } = req.body
     try {
-        let userId = req.params.id
+        let userId = req.params.userId
+        if (!userId) {
+            return res.status(400).json({ message: "User ID missing" });
+        }
         // console.log(userId);
+
         let isMovieExist = await Movies.findOne({ title, userId });
 
         if (isMovieExist) {
@@ -13,7 +17,7 @@ let addMovie = async (req, res) => {
         }
         let newMovie = await new Movies({
             userId,
-            imageUrl,
+            imageUrl: req.file?.filename || "",
             title,
             director,
             genre,
@@ -37,7 +41,7 @@ let addMovie = async (req, res) => {
 
 let getAllMovie = async (req, res) => {
     try {
-        let userId = req.params.id
+        let userId = req.params.userId
         // console.log(userId);
 
         let data = {}
@@ -45,7 +49,8 @@ let getAllMovie = async (req, res) => {
         if (userId) {
             data.userId = userId
         }
-        let movieData = await Movies.find(data)
+        let movieData = await Movies.find({ userId })
+        // console.log(movieData);
 
         res.status(200).json({
             message: "Movies fetched successfully",
@@ -108,9 +113,10 @@ let getMovieCountByUser = async (req, res) => {
         }
 
         let totalMovies = await Movies.countDocuments({ userId });
+        // console.log(totalMovies);
 
         res.status(200).json({
-            message: "Book count fetched successfully",
+            message: "movie count fetched successfully",
             totalMovies
         });
     } catch (error) {
@@ -119,16 +125,5 @@ let getMovieCountByUser = async (req, res) => {
     }
 }
 
-let getImage = (req, res) => {
 
-    fs.readFile(`C:/Users/user/Desktop/fathima-bs/Mithra/server/uploads/${req.params.imgName}`, (err, data) => {
-        if (err) {
-            return res.status(404).send("Image not found");
-        }
-
-        // res.set("Content-Type", "image/jpeg"); // or png
-        res.send(data);
-    })
-
-}
-module.exports = { addMovie, getAllMovie, getMovieById, updateMovie, getImage, getMovieCountByUser }
+module.exports = { addMovie, getAllMovie, getMovieById, updateMovie, getMovieCountByUser }

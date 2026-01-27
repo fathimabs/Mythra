@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   // Generate stars/dots for the background
-  const starsAndDots = Array.from({ length: 150 });
+  let starsAndDots = Array.from({ length: 150 });
 
   return (
     <footer className="relative mt-24 bg-black/40 border-t border-white/10 overflow-hidden backdrop-blur-xl">
@@ -11,9 +11,9 @@ function Footer() {
       {/* Galaxy background */}
       <div className="absolute inset-0 pointer-events-none">
         {starsAndDots.map((_, i) => {
-          const isStar = Math.random() > 0.85; // ~15% stars
-          const top = Math.random() * 100;
-          const left = Math.random() * 100;
+          let isStar = Math.random() > 0.85; // ~15% stars
+          let  top = Math.random() * 100;
+          let left = Math.random() * 100;
           return (
             <span
               key={i}
