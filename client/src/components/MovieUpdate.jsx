@@ -1,5 +1,5 @@
-import React, {  useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../axios/axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -10,7 +10,7 @@ function MovieUpdate() {
 
   let { id } = useParams();
   // console.log(id);
-  
+
   let navigate = useNavigate();
 
   let [data, setData] = useState({
@@ -260,12 +260,22 @@ function MovieUpdate() {
             )}
 
             {/* Submit */}
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition"
-            >
-              Update Movie
-            </button>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="submit"
+                className="flex-1 py-3 rounded-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition"
+              >
+                Save Changes
+              </button>
+
+              <Link
+                to="/profile"
+                className="flex-1 py-3 rounded-lg text-center font-semibold border border-white/20 hover:bg-white/10 transition"
+              >
+                Cancel
+              </Link>
+            </div>
+           
           </form>
         </div>
       </div>

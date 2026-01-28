@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import api from "../axios/axios";
@@ -58,7 +58,6 @@ function BookUpdate() {
       [name]: files ? files[0] : value
     }));
   };
-
   let handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -193,13 +192,21 @@ function BookUpdate() {
               </div>
             )}
 
-            <button
-              type="submit"
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg font-semibold"
-            >
-              Update Book
-            </button>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="submit"
+                className="flex-1 py-3 rounded-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition"
+              >
+                Save Changes
+              </button>
 
+              <Link
+                to="/profile"
+                className="flex-1 py-3 rounded-lg text-center font-semibold border border-white/20 hover:bg-white/10 transition"
+              >
+                Cancel
+              </Link>
+            </div>
             {errors.submit && (
               <p className="text-red-400 text-center">{errors.submit}</p>
             )}
