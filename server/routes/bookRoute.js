@@ -9,7 +9,7 @@ let bookRoute = express.Router()
 bookRoute.post('/addbook/:userId', upload.single('imageUrl'), addBook)
 bookRoute.get('/allbook/:userId', getBooks)
 bookRoute.get('/bookdetail/:id', getBookById)
-bookRoute.patch('/update/:id', updateBook)
+bookRoute.patch('/update/:id',  upload.single('imageUrl'),updateBook,)
 bookRoute.get("/count/:userId", getBookCountByUser);
 
 

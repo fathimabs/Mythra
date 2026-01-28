@@ -1,5 +1,5 @@
 let express = require('express')
-const { getImage } = require('../controller/imageController')
+let { getImage } = require('../controller/imageController')
 
 
 let imageRoute = express.Router()

@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../axios/axios";
 import Navbar from "./Navbar";
@@ -9,9 +9,20 @@ import Footer from "./Footer";
 function MovieUpdate() {
 
   let { id } = useParams();
+  // console.log(id);
+  
   let navigate = useNavigate();
 
-  let [data, setData] = useState({}); // movie data
+  let [data, setData] = useState({
+    imageUrl: null,
+    title: "",
+    director: "",
+    genre: "",
+    duration: "",
+    watchedOn: "",
+    status: "",
+    review: "",
+  });
   let [rating, setRating] = useState(0);
   let [showMore, setShowMore] = useState(false);
   let [errors, setErrors] = useState({});
@@ -20,19 +31,20 @@ function MovieUpdate() {
     let fetchMovie = async () => {
       try {
         let res = await api.get(`/movie/movie-detail/${id}`);
-        let movie = res.data.movie;
+        let movie = res.data.movies;
 
         setData({
-          imageUrl: movie.imageUrl || "",
-          title: movie.title || "",
-          director: movie.director || "",
-          genre: movie.genre || "",
-          duration: movie.duration || "",
-          watchedOn: movie.watchedOn || "",
-          status: movie.status || "",
-          review: movie.review || "",
+          imageUrl: null,
+          title: movie.title ?? "",
+          director: movie.director ?? "",
+          genre: movie.genre ?? "",
+          duration: movie.duration ?? "",
+          watchedOn: movie.watchedOn ?? "",
+          status: movie.status ?? "",
+          review: movie.review ?? "",
         });
         setRating(movie.rating || 0);
+        setShowMore(!!(movie.duration || movie.watchedOn || movie.status));
       } catch (err) {
         console.error(err);
         alert("Failed to fetch movie data.");
@@ -69,8 +81,17 @@ function MovieUpdate() {
     if (Object.keys(validateErrors).length > 0) return;
 
     try {
-     let formData = new FormData();
-    
+      let formData = new FormData()
+      formData.append("imageUrl", data.imageUrl);
+      formData.append("title", data.title);
+      formData.append("director", data.director);
+      formData.append("genre", data.genre);
+      formData.append("duration", data.duration);
+      formData.append("watchedOn", data.watchedOn);
+      formData.append("status", data.status);
+      formData.append("review", data.review);
+      formData.append("rating", rating);
+
       await api.patch(`/movie/update/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });

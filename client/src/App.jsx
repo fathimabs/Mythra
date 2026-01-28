@@ -31,7 +31,7 @@ function App() {
           <Route path='/book' element={<Book />}></Route>
           <Route path='/addbook' element={<AddBook />}></Route>
           <Route path='/addmovie' element={<AddMovie />}></Route>
-          <Route path='/bookupdate' element={<BookUpdate />}></Route>
+          <Route path='/bookupdate/:id' element={<BookUpdate />}></Route>
           <Route path='/movieupdate/:id' element={<MovieUpdate />}></Route>
           <Route path='/forgot-password' element={<ForgotPassword />}></Route>
           <Route path='/profile' element={<Profile />}></Route>

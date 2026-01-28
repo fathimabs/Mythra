@@ -1,10 +1,10 @@
 let express = require('express')
 let cors = require('cors')
-const mongoDb = require('./config/mongoDb');
-const userRoute = require('./routes/userRoute');
-const bookRoute = require('./routes/bookRoute');
-const movieRoute = require('./routes/movieRoute');
-const imageRoute = require('./routes/imageRoute');
+let mongoDb = require('./config/mongoDb');
+let userRoute = require('./routes/userRoute');
+let bookRoute = require('./routes/bookRoute');
+let movieRoute = require('./routes/movieRoute');
+let imageRoute = require('./routes/imageRoute');
 
 
 let app = express()

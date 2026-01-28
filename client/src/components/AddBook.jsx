@@ -198,22 +198,27 @@ function AddBook() {
             {/* Rating */}
             <div>
               <label className="block text-sm text-zinc-300 mb-1">Your Rating</label>
+
               <div className="flex space-x-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
-                    name='rating'
-                    onClick={() => setRating(star)}
-                    className={`text-xl ${star <= rating ? 'text-yellow-400' : 'text-zinc-500'
-                      } transition-colors`}
+                    onClick={() => {
+                      setRating(star);
+                      setErrors((prev) => ({ ...prev, rating: "" }));
+                    }}
+                    className={`text-xl transition-colors ${star <= rating ? "text-yellow-400" : "text-zinc-500"
+                      }`}
                   >
-
                     ★
                   </button>
                 ))}
-                {errors.rating && (<p className="text-red-400 text-sm mt-1">{errors.rating}</p>)}
               </div>
+
+              {errors.rating && (
+                <p className="text-red-400 text-sm mt-1">{errors.rating}</p>
+              )}
             </div>
 
             {/* Toggle Additional Details */}

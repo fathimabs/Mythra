@@ -82,7 +82,7 @@ let getBookById = async (req, res) => {
 let updateBook = async (req, res) => {
     let bookId = req.params.id
     try {
-        updateData = req.body
+     let updateData = req.body
         let bookUpdate = await Books.findByIdAndUpdate(bookId, updateData,
             {
                 new: true,
