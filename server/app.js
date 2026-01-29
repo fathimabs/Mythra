@@ -1,5 +1,7 @@
 let express = require('express')
 let cors = require('cors')
+let dotenv = require('dotenv')
+dotenv.config()
 let mongoDb = require('./config/mongoDb');
 let userRoute = require('./routes/userRoute');
 let bookRoute = require('./routes/bookRoute');
@@ -10,7 +12,9 @@ let imageRoute = require('./routes/imageRoute');
 let app = express()
 app.use(express.json())
 app.use(cors())
-mongoDb();
+console.log(process.env.MONGODB_URL);
+
+mongoDb(process.env.MONGODB_URL);
 
 app.use('/api/user', userRoute)
 app.use('/api/book', bookRoute)

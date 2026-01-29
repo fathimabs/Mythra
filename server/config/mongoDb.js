@@ -1,8 +1,8 @@
 let mongoose = require('mongoose')
 
-async function mongoDb() {
+async function mongoDb(url) {
     try {
-        await mongoose.connect("mongodb://127.0.0.1:27017/Mithra");
+        await mongoose.connect(url);
         console.log("mongoDb is Connected");
     } catch (err) {
         console.error("Connection Error", err);

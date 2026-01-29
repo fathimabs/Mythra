@@ -82,7 +82,7 @@ let getBookById = async (req, res) => {
 let updateBook = async (req, res) => {
     let bookId = req.params.id
     try {
-     let updateData = req.body
+        let updateData = req.body
         let bookUpdate = await Books.findByIdAndUpdate(bookId, updateData,
             {
                 new: true,
@@ -121,18 +121,7 @@ let getBookCountByUser = async (req, res) => {
     }
 }
 
-// let getImage = (req, res) => {
 
-//     fs.readFile(`C:/Users/user/Desktop/fathima-bs/Mithra/server/uploads/${req.params.imgName}`, (err, data) => {
-//         if (err) {
-//             return res.status(404).send("Image not found");
-//         }
-
-//         // res.set("Content-Type", "image/jpeg"); // or png
-//         res.send(data);
-//     })
-
-// }
 
 
 module.exports = { addBook, getBooks, getBookById, updateBook, getBookCountByUser }

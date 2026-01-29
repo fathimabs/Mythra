@@ -40,6 +40,8 @@ function Book() {
         );
     }, [search, books]);
 
+   
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-zinc-100 flex flex-col">
             <Navbar />
@@ -96,7 +98,7 @@ function Book() {
                                     alt={book.title || "Book cover"}
                                     className="h-44 w-full object-cover rounded-xl"
                                 />
-
+                               
                                 <div>
                                     <h2 className="font-semibold text-lg leading-tight">
                                         {book.title}
@@ -107,7 +109,9 @@ function Book() {
                                 <div className="text-yellow-400 text-sm">
                                     {"⭐".repeat(Math.min(book.rating || 0, 5))}
                                 </div>
-
+                                <p className="text-xs text-zinc-500 mt-auto">
+                                    {book.review}
+                                </p>
                                 <div className="mt-auto pt-4 border-t border-white/10 flex gap-3">
                                     <Link
                                         to={`/bookupdate/${book._id || book.id}`}

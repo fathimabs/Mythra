@@ -30,7 +30,11 @@ let bookSchema = new mongoose.Schema({
     review: {
         type: String,
         default: ""
-    }
+    },
+    isFavorite: {
+        type: Boolean,
+        default: false,
+    },
 
 },
     {

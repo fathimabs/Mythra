@@ -112,7 +112,7 @@ function Movie() {
                             </div>
 
                             <p className="text-xs text-zinc-500 mt-auto">
-                                Personal notes about the movie...
+                              {movie.review}
                             </p>
 
                             {/* Actions */}

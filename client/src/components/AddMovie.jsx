@@ -2,11 +2,12 @@ import React, { useRef, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import api from '../axios/axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function AddMovie() {
   let formRefresh = useRef()
+  let navigate = useNavigate()
 
   let userId = localStorage.getItem("userId");
 
@@ -58,7 +59,7 @@ function AddMovie() {
     if (!data.genre) newErrors.genre = "genre is Required"
 
     if (!data.review) newErrors.review = "Movie review is Required"
-    
+
     return newErrors
   }
 
@@ -103,12 +104,18 @@ function AddMovie() {
         status: "",
         review: "",
       });
-
+      navigate('/movie')
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      alert("Failed to add movie");
+      if (error.response?.status === 409) {
+        setErrors({
+          title: "You have already added this movie 🎬"
+        });
+      } else {
+        alert("Failed to add movie");
+      }
     }
   }
+
 
   return (
     <div className="relative min-h-screen w-full bg-[#0b0d18] text-zinc-100 overflow-hidden">
