@@ -18,10 +18,7 @@ function Profile() {
   let userId = localStorage.getItem("userId");
 
   useEffect((() => {
-    if (!userId) {
-      navigate("/");
-      return;
-    }
+    
     let getUser = async () => {
       try {
         let response = await api.get(`/user/profile/${userId}`)
@@ -34,7 +31,7 @@ function Profile() {
         })
       } catch (error) {
         console.error("Failed to fetch user:", error);
-        navigate("/");
+        navigate("/login");
       }
 
     }

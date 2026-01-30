@@ -62,7 +62,7 @@ function Footer() {
           <h4 className="font-semibold mb-3">Quick Links</h4>
           <ul className="space-y-2">
             {[
-              { label: "Home", to: "/home" },
+              { label: "Home", to: "/" },
               { label: "Books", to: "/book" },
               { label: "Movies", to: "/movie" },
               { label: "Profile", to: "/profile" },

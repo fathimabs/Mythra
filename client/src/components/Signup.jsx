@@ -76,7 +76,7 @@ function Signup() {
       await api.post("/user", data)
 
       alert("User Registration successful!");
-      navigate('/')
+      navigate('/login')
 
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
@@ -185,7 +185,7 @@ function Signup() {
         {/* Footer */}
         <p className="text-center text-zinc-400 mt-6 text-sm">
           Already have an account?{" "}
-          <Link to="/" className="text-[#F5C77A] hover:underline">
+          <Link to="/login" className="text-[#F5C77A] hover:underline">
             Log in
           </Link>
         </p>

@@ -51,11 +51,13 @@ function Navbar() {
 
         {/* Logo */}
         <div className="flex justify-center items-center space-x-5">
-          <img
-            src={mithralogo}
-            alt="Mythra Logo"
-            className="h-16 rounded-full"
-          />
+          <Link to={'/'}>
+            <img
+              src={mithralogo}
+              alt="Mythra Logo"
+              className="h-16 rounded-full"
+            />
+          </Link>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#F5C77A] via-purple-400 to-[#6C5CE7] bg-clip-text text-transparent">
             Mythra
           </h1>
@@ -94,9 +96,9 @@ function Navbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="sm:hidden bg-black/80 border-t border-white/10 px-6 py-4 space-y-4 text-center text-zinc-300 relative z-10">
-          <Link to="/home" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Home</Link>
-          <Link to="/books" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Books</Link>
-          <Link to="/movies" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Movies</Link>
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Home</Link>
+          <Link to="/book" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Books</Link>
+          <Link to="/movie" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Movies</Link>
           <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Profile</Link>
         </div>
       )}

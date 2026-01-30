@@ -74,7 +74,7 @@ function BookUpdate() {
 
       await api.patch(`/book/update/${id}`, formData);
       navigate("/book");
-    } catch (err) {
+    } catch (err) { 
       console.error(err);
       setErrors({ submit: "Failed to update book" });
     }

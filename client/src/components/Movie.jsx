@@ -16,7 +16,7 @@ function Movie() {
 
     useEffect(() => {
         if (!userId) {
-            navigate("/");
+            navigate("/login");
             return;
         }
 
