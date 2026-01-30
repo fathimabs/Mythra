@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import mithralogo from "../assets/images/mithralogo.png";
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import api from '../axios/axios';
+import { userContext } from '../App';
 
 function Login() {
   let navigate = useNavigate();
   let [serverError, setServerError] = useState("");
 
+
+  // context variable
+
+  let { user, setUser } = useContext(userContext)
+
   let { register, handleSubmit, formState: { errors } } = useForm();
+  let [showPassword, setShowPassword] = useState(false)
 
   let onSubmit = async (data) => {
     setServerError(""); // Clear previous errors
@@ -17,18 +24,26 @@ function Login() {
       let response = await api.post("/user/login", data);
 
       localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('user', JSON.stringify(response.data));
+
+      localStorage.setItem('token', response.data.token)
+
+      setUser(response.data)
 
       if (response.status >= 200 && response.status < 300) {
 
-       navigate("/home");
-       
+        navigate("/");
+
       } else {
 
         setServerError(response.data.message || "Login failed");
       }
     } catch (error) {
-
-      setServerError("Something went wrong. Please try again.");
+      if (error.response && error.response.status === 401) {
+        setServerError("Incorrect username or password");
+      } else {
+        setServerError("Something went wrong. Please try again.");
+      }
       console.error(error);
     }
   };
@@ -79,30 +94,40 @@ function Login() {
           <div className="mb-4">
             <label className="block mb-1 text-sm">Password</label>
             <input
-              type="password"
+              type={showPassword ? "type" : "password"}
               placeholder="Enter your password"
               {...register("password", { required: "Password is required" })}
               className="w-full px-4 py-2 rounded-lg bg-black/30 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-11 top-76  text-zinc-400 hover:text-zinc-100"
+            >
+              {showPassword ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7c1.39 0 2.71.33 3.875.925M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
+            </button>
             {errors.password && (
               <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
             )}
           </div>
 
           {/* Remember Me / Forgot Password */}
-          <div className="flex items-center justify-between text-sm mb-6">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                {...register("rememberMe")}
-                className="accent-[#6C5CE7]"
-              />
-              Remember me
-            </label>
+          {/* <div className="flex items-center justify-between text-sm mb-6">
+
             <Link to="/forgot-password" className="text-[#F5C77A] hover:underline">
               Forgot password?
             </Link>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <button

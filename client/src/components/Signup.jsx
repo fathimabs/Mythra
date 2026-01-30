@@ -13,6 +13,9 @@ function Signup() {
   })
 
   let [errors, setErrors] = useState({});
+
+  let [showPassword, setShowPassword] = useState(false)
+
   // console.log(data);
 
   // Handle input change
@@ -132,12 +135,29 @@ function Signup() {
           <div>
             <label htmlFor="password" className="block text-sm text-zinc-300 mb-1">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Create a password"
               onChange={getData}
               name="password"
               className="w-full px-4 py-3 rounded-lg bg-zinc-900/80 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-10 top-92  text-zinc-400 hover:text-zinc-100"
+            >
+              {showPassword ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7c1.39 0 2.71.33 3.875.925M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
+            </button>
             {errors.password && (<p className="text-red-400 text-sm mt-1">{errors.password}</p>)}
           </div>
 

@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import mithralogo from "../assets/images/mithralogo.png";
+import { userContext } from "../App";
 
 function Navbar() {
   let [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   let navigate = useNavigate()
 
+  // let { user } = useContext(userContext)
+
+  let user = JSON.parse(localStorage.getItem("user"))
+
   // Generate an array for stars/dots
   let starsAndDots = Array.from({ length: 150 }); // 100 items, adjust density
   let onHandleLogout = () => {
     localStorage.clear();
-    navigate('/')
+    navigate('/login')
   }
   return (
     <nav className="relative  top-0 z-50 bg-black border-b border-white/10 overflow-hidden">
@@ -58,12 +63,14 @@ function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden sm:flex gap-8 text-sm text-zinc-300">
-          <Link to="/home" className="hover:text-purple-400 transition">Home</Link>
+          <Link to="/" className="hover:text-purple-400 transition">Home</Link>
           <Link to="/book" className="hover:text-purple-400 transition">Books</Link>
           <Link to="/movie" className="hover:text-purple-400 transition">Movies</Link>
           <Link to="/profile" className="hover:text-purple-400 transition">Profile</Link>
           <button onClick={onHandleLogout} className="hover:text-purple-400 transition">Logout</button>
-       
+
+          <h1>{user?.username}</h1>
+
         </div>
 
         {/* Mobile Menu Button */}

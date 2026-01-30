@@ -2,6 +2,7 @@ let mongoose = require('mongoose')
 
 async function mongoDb(url) {
     try {
+              
         await mongoose.connect(url);
         console.log("mongoDb is Connected");
     } catch (err) {

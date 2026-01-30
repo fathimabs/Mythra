@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 let bcrypt = require('bcrypt')
+let jwt = require('jsonwebtoken')
+
 
 let CreateUser = async (req, res) => {
     // console.log(req.body);
@@ -10,7 +12,7 @@ let CreateUser = async (req, res) => {
         if (isUserEmail) {
             return res.status(409).json({ message: "Email already exists" });
         }
- 
+
         let hash = await bcrypt.hash(password, 10)
 
         let newUser = await new User({
@@ -60,12 +62,12 @@ let updateUser = async (req, res) => {
         if (!userId) {
             return res.status(404).json({ message: "User not found" });
         }
-        let  updateFields = {};
+        let updateFields = {};
         if (req.body.username) updateFields.username = username;
         if (req.body.email) updateFields.email = email;
 
         let updateData = await User.findByIdAndUpdate(userId,
-             updateFields,
+            updateFields,
             { new: true, runValidators: true }
         ).select("-password")
         // console.log(updateData);
@@ -112,12 +114,14 @@ let loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-
+        let token = jwt.sign({ id: userExist.id, email: userExist.email }, "123", { expiresIn: '1h' })
 
         res.status(200).json({
             message: "Welcome to Mythra",
-            userId:userExist.id
-
+            userId: userExist.id,
+            username: userExist.username,
+            email: userExist.email,
+            token
         });
 
     } catch (error) {

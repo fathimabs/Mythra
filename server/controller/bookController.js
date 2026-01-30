@@ -43,7 +43,7 @@ let getBooks = async (req, res) => {
     try {
         let userId = req.params.userId
         let data = {}
-        // console.log(data);
+        // console.log(userId);
 
         if (userId) {
             data.userId = userId

@@ -59,7 +59,7 @@ function Profile() {
       // console.log("Profile updated Successfully", formData);
       alert("Profile Updated Successfully!");
 
-      navigate('/home')
+      navigate('/')
 
     } catch (error) {
       console.error("Update failed:", error);
