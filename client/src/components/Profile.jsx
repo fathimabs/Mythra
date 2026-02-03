@@ -144,7 +144,7 @@ function Profile() {
               </button>
 
               <Link
-                to="/profile"
+                to="/"
                 className="flex-1 py-3 rounded-lg text-center font-semibold border border-white/20 hover:bg-white/10 transition"
               >
                 Cancel

@@ -115,7 +115,7 @@ function AddBook() {
           title: "You have already added this book 🎬"
         });
       } else {
-        alert("Failed to add movie");
+        alert("Failed to add Book");
       }
     }
   }

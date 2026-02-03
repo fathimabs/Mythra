@@ -100,6 +100,9 @@ function Navbar() {
           <Link to="/book" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Books</Link>
           <Link to="/movie" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Movies</Link>
           <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="block hover:text-purple-400 transition">Profile</Link>
+          <button onClick={onHandleLogout} className="hover:text-purple-400 transition">Logout</button>
+          
+          <h1>{user?.username}</h1>
         </div>
       )}
 
