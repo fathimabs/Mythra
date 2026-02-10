@@ -1,39 +1,71 @@
 const Books = require("../models/bookModel");
+const { Readable } = require("stream");
 
+let cloudinary = require('cloudinary').v2
+
+require('../config/cloudinary')
 
 let addBook = async (req, res) => {
-    let { imageUrl, title, author, genre, pages, readOn, rating, review } = req.body
-
+    const { title, author, genre, pages, readOn, rating, review } = req.body;
+    const { userId } = req.params;
 
     try {
-        let userId = req.params.userId
-
         if (!userId) {
             return res.status(400).json({ message: "User ID missing" });
         }
-        // console.log(userId);
-        let isBookExist = await Books.findOne({ title, userId });
 
-        if (isBookExist) {
-            return res.status(409).json({ message: "Book already exists for this user " });
+        if (!req.file) {
+            return res.status(400).json({ message: "Image is required" });
         }
-        let newBook = await new Books({
+
+        // Check if book already exists FIRST
+        const isBookExist = await Books.findOne({ title, userId });
+        if (isBookExist) {
+            return res
+                .status(409)
+                .json({ message: "Book already exists for this user" });
+        }
+
+        // Upload image buffer to Cloudinary
+        const uploadResult = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "books",
+                    resource_type: "image",
+                },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+
+            Readable.from(req.file.buffer).pipe(uploadStream);
+        });
+
+        console.log(uploadResult);
+
+
+        // Save book with Cloudinary image URL
+        const newBook = new Books({
             userId,
-            imageUrl: req.file?.filename || "",
+            imageUrl: uploadResult.secure_url,
             title,
             author,
             genre,
             pages,
             readOn,
             rating,
-            review
-        })
-        await newBook.save()
-        res.status(201).json({
-            message: "Book added successfully"
+            review,
         });
 
+        await newBook.save();
+
+        res.status(201).json({
+            message: "Book added successfully",
+            book: newBook,
+        });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Something went wrong" });
     }
 

@@ -103,7 +103,7 @@ function Home() {
               <div className="h-48 bg-gradient-to-br from-purple-700/40 to-indigo-700/40 flex items-center justify-center text-zinc-300 px-2">
                 {book.imageUrl ? (
                   <img
-                    src={`${BASE_URL}/${book.imageUrl}`}
+                    src={`${book.imageUrl}`}
                     alt={book.title}
                     className="h-full w-full object-cover"
                   />

@@ -12,3 +12,4 @@ exports.getImage = (req, res) => {
 
   res.sendFile(imagePath)
 }
+ 

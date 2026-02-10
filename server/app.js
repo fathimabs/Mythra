@@ -14,7 +14,7 @@ let imageRoute = require('./routes/imageRoute');
 let app = express()
 app.use(express.json())
 app.use(cors())
-console.log(process.env.MONGODB_URL);
+// console.log(process.env.MONGODB_URL);
 
 mongoDb(process.env.MONGODB_URL);
 
@@ -23,8 +23,6 @@ app.use('/api/user', userRoute)
 app.use('/api/book', bookRoute)
 app.use('/api/movie', movieRoute)
 app.use('/api/image', imageRoute)
-
-
 
 
 
