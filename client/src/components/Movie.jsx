@@ -7,6 +7,7 @@ import api from "../axios/axios";
 let BASE_URL = import.meta.env.VITE_BASE_URL + '/api/image'
 
 function Movie() {
+
     let navigate = useNavigate();
     let userId = localStorage.getItem("userId");
 
@@ -14,7 +15,13 @@ function Movie() {
     let [movies, setMovies] = useState([]);
     let [error, setError] = useState("");
 
+    //Filters
+    let [genre, setGenre] = useState("");
+    let [ratingFilter, setRatingFilter] = useState("");
+    let [sort, setSort] = useState("");
+
     useEffect(() => {
+
         if (!userId) {
             navigate("/login");
             return;
@@ -22,6 +29,7 @@ function Movie() {
 
         let fetchMovies = async () => {
             setError("");
+
             try {
                 let res = await api.get(`/movie/all-movie/${userId}?limit=50`);
                 setMovies(res.data.movies || []);
@@ -32,14 +40,92 @@ function Movie() {
         };
 
         fetchMovies();
+
     }, [userId, navigate]);
 
+    let genres = useMemo(() => {
+
+        return [
+            ...new Set(
+                movies
+                    .map((movie) => movie.genre)
+                    .filter(Boolean)
+            )
+        ];
+
+    }, [movies]);
+
     // Filter movies by search
-    let  filteredMovies = useMemo(() => {
-        return movies.filter((movie) =>
-            movie.title?.toLowerCase().includes(search.toLowerCase())
-        );
-    }, [search, movies]);
+
+    let filteredMovies = useMemo(() => {
+
+        let result = movies.filter((movie) => {
+
+            let matchesSearch = (movie.title || "")
+                .toLowerCase()
+                .includes(search.toLowerCase());
+
+            let matchesGenre =
+                genre === "" ||
+                movie.genre === genre;
+
+
+
+            let matchesRating =
+                ratingFilter === "" ||
+                movie.rating >= Number(ratingFilter);
+
+
+
+            return (
+                matchesSearch &&
+                matchesGenre &&
+                matchesRating
+            );
+        })
+
+        if (sort === "az") {
+
+            result.sort((a, b) =>
+                a.title.localeCompare(b.title)
+            );
+
+        }
+
+
+        else if (sort === "za") {
+
+            result.sort((a, b) =>
+                b.title.localeCompare(a.title)
+            );
+
+        }
+
+
+        else if (sort === "ratingHigh") {
+
+            result.sort((a, b) =>
+                b.rating - a.rating
+            );
+
+        }
+
+
+        else if (sort === "ratingLow") {
+
+            result.sort((a, b) =>
+                a.rating - b.rating
+            );
+
+        }
+
+
+
+        return result;
+
+
+    }, [search, movies, genre, ratingFilter, sort]);
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-zinc-100 flex flex-col">
@@ -60,8 +146,11 @@ function Movie() {
                     </Link>
                 </div>
 
+
+
                 {/* Search */}
-                <div className="flex flex-col md:flex-row gap-6 mb-12">
+
+                <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <input
                         type="text"
                         placeholder="Search movies..."
@@ -69,6 +158,148 @@ function Movie() {
                         onChange={(e) => setSearch(e.target.value)}
                         className="flex-1 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-zinc-400"
                     />
+                    <select
+                        value={genre}
+                        onChange={(e) => setGenre(e.target.value)}
+                        className="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-zinc-200"
+
+                    >
+
+                        <option
+                            value=""
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            All Genres
+                        </option>
+
+
+                        {
+                            genres.map((item) => (
+
+                                <option
+                                    key={item}
+                                    value={item}
+                                    className="bg-gray-900 text-zinc-200"
+                                >
+
+                                    {item}
+
+                                </option>
+
+                            ))
+                        }
+
+
+                    </select>
+
+
+
+
+
+                    {/* Rating */}
+
+                    <select
+                        value={ratingFilter}
+                        onChange={(e) => setRatingFilter(e.target.value)}
+                        className="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-zinc-200"
+                    >
+
+                        <option
+                            value=""
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            All Ratings
+                        </option>
+
+
+                        <option
+                            value="5"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            ⭐ 5+
+                        </option>
+
+
+                        <option
+                            value="4"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            ⭐ 4+
+                        </option>
+
+
+                        <option
+                            value="3"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            ⭐ 3+
+                        </option>
+
+
+                    </select>
+
+
+
+
+
+                    {/* Sort */}
+
+                    <select
+
+                        value={sort}
+
+                        onChange={(e) => setSort(e.target.value)}
+
+                        className="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-zinc-200"
+
+                    >
+                        <option
+                            value=""
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            Sort By
+                        </option>
+
+
+                        <option
+                            value="az"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            Title A-Z
+                        </option>
+
+
+                        <option
+                            value="za"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            Title Z-A
+                        </option>
+
+
+                        <option
+                            value="ratingHigh"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            Highest Rating
+                        </option>
+
+
+                        <option
+                            value="ratingLow"
+                            className="bg-gray-900 text-zinc-200"
+                        >
+                            Lowest Rating
+                        </option>
+
+
+
+
+                    </select>
+
+
+
+
                 </div>
 
                 {/* Error message */}
@@ -112,7 +343,7 @@ function Movie() {
                             </div>
 
                             <p className="text-xs text-zinc-500 mt-auto">
-                              {movie.review}
+                                {movie.review}
                             </p>
 
                             {/* Actions */}
