@@ -114,8 +114,11 @@ let loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-        let token = jwt.sign({ id: userExist.id, email: userExist.email }, "123", { expiresIn: '1h' })
-
+        let token = jwt.sign(
+            { id: userExist.id, email: userExist.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
         res.status(200).json({
             message: "Welcome to Mythra",
             userId: userExist.id,

@@ -18,6 +18,9 @@ app.use(cors())
 
 mongoDb(process.env.MONGODB_URL);
 
+app.get('/', (req, res) => {
+  res.send('Mythra API is running 🚀');
+});
 
 app.use('/api/user', userRoute)
 app.use('/api/book', bookRoute)
@@ -26,8 +29,10 @@ app.use('/api/image', imageRoute)
 
 
 
-app.listen(3000, () => {
-    console.log("Mithra-app server Connected");
-})
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Mithra-app server Connected on port ${PORT}`);
+});
 
 

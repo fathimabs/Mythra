@@ -1,7 +1,7 @@
 let jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.JWT_SECRET;
 
-
-let tokenValidation = (req, res, next) => {
+const tokenValidation = (req, res, next) => {
 
     if (!req.headers.authorization) {
         return res.status(404).json({ message: "token not available" })
@@ -17,7 +17,10 @@ let tokenValidation = (req, res, next) => {
     }
 
     // 3. Verify token
-    jwt.verify(token, '123', (err, decoded) => {
+ 
+
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    
         if (err) {
             return res.status(401).json({ message: "Invalid or expired token" });
         }
