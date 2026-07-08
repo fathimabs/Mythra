@@ -18,35 +18,39 @@ function Login() {
   let [showPassword, setShowPassword] = useState(false)
 
   let onSubmit = async (data) => {
-    setServerError(""); // Clear previous errors
+  setServerError("");
 
-    try {
-      let response = await api.post("/user/login", data);
+  try {
+    let response = await api.post("/user/login", data);
 
-      localStorage.setItem('userId', response.data.userId);
-      localStorage.setItem('user', JSON.stringify(response.data));
+    // Save user data
+    localStorage.setItem("userId", response.data.userId);
+    localStorage.setItem("user", JSON.stringify(response.data));
+    localStorage.setItem("token", response.data.token);
 
-      localStorage.setItem('token', response.data.token)
+    // Update Axios Authorization header immediately
+    api.defaults.headers.common["Authorization"] =
+      `Bearer ${response.data.token}`;
 
-      setUser(response.data)
+    // Update Context
+    setUser(response.data);
 
-      if (response.status >= 200 && response.status < 300) {
-
-        navigate("/");
-
-      } else {
-
-        setServerError(response.data.message || "Login failed");
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setServerError("Incorrect username or password");
-      } else {
-        setServerError("Something went wrong. Please try again.");
-      }
-      console.error(error);
+    if (response.status >= 200 && response.status < 300) {
+      navigate("/");
+    } else {
+      setServerError(response.data.message || "Login failed");
     }
-  };
+
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      setServerError("Incorrect username or password");
+    } else {
+      setServerError("Something went wrong. Please try again.");
+    }
+
+    console.error(error);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
